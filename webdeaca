@@ -1,1 +1,251 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deaca Punya</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#f4f6fb;
+  --card:#ffffff;
+  --text:#111;
+  --primary:#6366f1;
+}
+
+body.dark{
+  --bg:#0f172a;
+  --card:#1e293b;
+  --text:#fff;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  transition:.3s;
+}
+
+header{
+  background:var(--primary);
+  color:white;
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.container{
+  padding:20px;
+  max-width:1000px;
+  margin:auto;
+}
+
+.card{
+  background:var(--card);
+  padding:20px;
+  border-radius:15px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+  margin-bottom:20px;
+  animation:fade .4s ease;
+}
+
+@keyframes fade{
+  from{opacity:0; transform:translateY(10px)}
+  to{opacity:1; transform:translateY(0)}
+}
+
+input,button{
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  margin:5px 0;
+}
+
+input{
+  width:100%;
+  background:#eee;
+}
+
+button{
+  background:var(--primary);
+  color:white;
+  cursor:pointer;
+}
+
+button:hover{opacity:.8;}
+
+.product{
+  display:flex;
+  justify-content:space-between;
+  padding:8px;
+  margin:5px 0;
+  background:rgba(0,0,0,0.05);
+  border-radius:10px;
+}
+
+.total{
+  font-weight:600;
+  font-size:20px;
+  margin-top:10px;
+}
+
+.hidden{display:none}
+
+/* STRUK PAGE */
+.struk{
+  max-width:400px;
+  margin:40px auto;
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 10px 20px rgba(0,0,0,0.2);
+  color:black;
+}
+
+.struk h2{
+  text-align:center;
+}
+
+.struk-item{
+  display:flex;
+  justify-content:space-between;
+  margin:5px 0;
+}
+
+.struk-total{
+  border-top:1px dashed #000;
+  margin-top:10px;
+  padding-top:10px;
+  font-weight:600;
+}
+
+.center{
+  text-align:center;
+  margin-top:15px;
+}
+
+@media print{
+  body *{visibility:hidden;}
+  .struk, .struk *{visibility:visible;}
+  .struk{position:absolute; left:0; top:0; width:100%;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h2>🏛️ TOKO DEACA</h2>
+  <button onclick="toggleMode()">Dark / Light</button>
+</header>
+
+<div class="container" id="kasirPage">
+
+<div class="card">
+  <h3>Tambah Produk</h3>
+  <input type="text" id="nama" placeholder="Nama Produk">
+  <input type="number" id="harga" placeholder="Harga">
+  <button onclick="addProduct()">Tambah Produk</button>
+</div>
+
+<div class="card">
+  <h3>Daftar Produk</h3>
+  <div id="list"></div>
+  <div class="total">Total: Rp <span id="total">0</span></div>
+  <button onclick="buatStruk()">Lihat Struk</button>
+</div>
+
+</div>
+
+<!-- HALAMAN STRUK -->
+<div id="strukPage" class="hidden">
+  <div class="struk">
+    <h2>🏛️ TOKO DEACA</h2>
+    <div id="tanggal"></div>
+    <hr>
+    <div id="strukList"></div>
+    <div class="struk-total">
+      Total: Rp <span id="strukTotal">0</span>
+    </div>
+    <div class="center">
+      <button onclick="window.print()">Print</button>
+      <button onclick="kembali()">Kembali</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+let total = 0;
+let products = [];
+
+function addProduct(){
+  const nama = document.getElementById("nama").value;
+  const harga = parseInt(document.getElementById("harga").value);
+
+  if(!nama || !harga){
+    alert("Isi dulu!");
+    return;
+  }
+
+  total += harga;
+  products.push({nama,harga});
+
+  document.getElementById("total").innerText = total.toLocaleString();
+
+  const div = document.createElement("div");
+  div.className="product";
+  div.innerHTML = `
+    <span>${nama} - Rp ${harga.toLocaleString()}</span>
+    <button onclick="hapus(this, ${harga})">X</button>
+  `;
+  document.getElementById("list").appendChild(div);
+
+  document.getElementById("nama").value="";
+  document.getElementById("harga").value="";
+}
+
+function hapus(btn, harga){
+  total -= harga;
+  products = products.filter(p=>p.harga!==harga);
+  document.getElementById("total").innerText = total.toLocaleString();
+  btn.parentElement.remove();
+}
+
+function toggleMode(){
+  document.body.classList.toggle("dark");
+}
+
+function buatStruk(){
+  document.getElementById("kasirPage").classList.add("hidden");
+  document.getElementById("strukPage").classList.remove("hidden");
+
+  const strukList = document.getElementById("strukList");
+  strukList.innerHTML="";
+
+  products.forEach(p=>{
+    strukList.innerHTML += `
+      <div class="struk-item">
+        <span>${p.nama}</span>
+        <span>Rp ${p.harga.toLocaleString()}</span>
+      </div>
+    `;
+  });
+
+  document.getElementById("strukTotal").innerText = total.toLocaleString();
+  document.getElementById("tanggal").innerText =
+    new Date().toLocaleString();
+}
+
+function kembali(){
+  document.getElementById("kasirPage").classList.remove("hidden");
+  document.getElementById("strukPage").classList.add("hidden");
+}
+
+</script>
+
+</body>
+</html>
