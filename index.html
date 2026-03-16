@@ -7,6 +7,9 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
+<!-- Library untuk export struk jadi PNG -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <style>
 
 body{
@@ -35,6 +38,295 @@ background:white;
 padding:20px;
 border-radius:12px;
 box-shadow:0 10px 20px rgba(0,0,0,0.1);
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:10px;
+margin:5px 0;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+button{
+padding:10px 15px;
+border:none;
+border-radius:8px;
+background:#4f46e5;
+color:white;
+cursor:pointer;
+margin:3px;
+}
+
+button:hover{opacity:.8;}
+
+.product{
+display:flex;
+justify-content:space-between;
+padding:8px;
+background:#f1f1f1;
+margin:5px 0;
+border-radius:8px;
+}
+
+.total{
+font-size:20px;
+font-weight:600;
+margin-top:10px;
+}
+
+.hidden{
+display:none;
+}
+
+/* STRUK */
+
+.struk{
+width:230px;
+margin:auto;
+background:white;
+padding:10px;
+font-family:monospace;
+font-size:12px;
+color:black;
+}
+
+.struk h3{
+text-align:center;
+margin:5px 0;
+}
+
+.line{
+border-top:1px dashed black;
+margin:8px 0;
+}
+
+.struk-item{
+display:flex;
+justify-content:space-between;
+font-size:12px;
+}
+
+.center{
+text-align:center;
+margin-top:5px;
+}
+
+@media print{
+
+@page{
+size:58mm auto;
+margin:0;
+}
+
+body *{
+visibility:hidden;
+}
+
+.struk, .struk *{
+visibility:visible;
+}
+
+.struk{
+position:absolute;
+left:0;
+top:0;
+width:58mm;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h2>🏪 KASIR TOKO DEACA</h2>
+</header>
+
+<div class="container" id="kasirPage">
+
+<div class="card">
+
+<h3>Tambah Produk</h3>
+
+<input id="nama" placeholder="Nama produk">
+
+<input id="harga" type="number" placeholder="Harga">
+
+<input id="qty" type="number" placeholder="Jumlah">
+
+<button onclick="tambah()">Tambah</button>
+
+</div>
+
+<div class="card">
+
+<h3>Keranjang</h3>
+
+<div id="list"></div>
+
+<div class="total">
+Total : Rp <span id="total">0</span>
+</div>
+
+<br>
+
+<button onclick="buatStruk()">Lihat Struk</button>
+
+</div>
+
+</div>
+
+
+<!-- STRUK -->
+
+<div id="strukPage" class="hidden">
+
+<div class="struk" id="areaStruk">
+
+<h3>TOKO DEACA</h3>
+
+<div class="center" id="tanggal"></div>
+
+<div class="line"></div>
+
+<div id="strukList"></div>
+
+<div class="line"></div>
+
+<div class="struk-item">
+<b>TOTAL</b>
+<b>Rp <span id="strukTotal"></span></b>
+</div>
+
+<div class="line"></div>
+
+<div class="center">
+Terima Kasih 🙏
+</div>
+
+</div>
+
+<br>
+
+<div class="center">
+
+<button onclick="window.print()">Print</button>
+
+<button onclick="downloadStruk()">Download PNG</button>
+
+<button onclick="kembali()">Kembali</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+let total = 0
+let products = []
+
+function tambah(){
+
+let nama = document.getElementById("nama").value
+let harga = parseInt(document.getElementById("harga").value)
+let qty = parseInt(document.getElementById("qty").value)
+
+if(!nama || !harga || !qty){
+alert("Isi semua dulu bro")
+return
+}
+
+let subtotal = harga * qty
+
+total += subtotal
+
+products.push({nama,harga,qty,subtotal})
+
+document.getElementById("total").innerText = total.toLocaleString()
+
+let div = document.createElement("div")
+
+div.className="product"
+
+div.innerHTML=`
+<span>${nama} (${qty} x ${harga.toLocaleString()})</span>
+<span>Rp ${subtotal.toLocaleString()}</span>
+`
+
+document.getElementById("list").appendChild(div)
+
+document.getElementById("nama").value=""
+document.getElementById("harga").value=""
+document.getElementById("qty").value=""
+
+}
+
+function buatStruk(){
+
+document.getElementById("kasirPage").classList.add("hidden")
+document.getElementById("strukPage").classList.remove("hidden")
+
+let strukList = document.getElementById("strukList")
+
+strukList.innerHTML=""
+
+products.forEach(p=>{
+
+strukList.innerHTML+=`
+
+<div>${p.nama}</div>
+
+<div class="struk-item">
+<span>${p.qty} x ${p.harga.toLocaleString()}</span>
+<span>${p.subtotal.toLocaleString()}</span>
+</div>
+
+`
+
+})
+
+document.getElementById("strukTotal").innerText = total.toLocaleString()
+
+document.getElementById("tanggal").innerText =
+new Date().toLocaleString()
+
+}
+
+function kembali(){
+
+document.getElementById("kasirPage").classList.remove("hidden")
+
+document.getElementById("strukPage").classList.add("hidden")
+
+}
+
+function downloadStruk(){
+
+let area = document.getElementById("areaStruk")
+
+html2canvas(area).then(canvas=>{
+
+let link = document.createElement("a")
+
+link.download = "struk-toko.png"
+
+link.href = canvas.toDataURL()
+
+link.click()
+
+})
+
+}
+
+</script>
+
+</body>
+</html>box-shadow:0 10px 20px rgba(0,0,0,0.1);
 margin-bottom:20px;
 }
 
