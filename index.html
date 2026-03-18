@@ -6,193 +6,95 @@
 <title>KASIR TOKO DEACA</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
-<!-- Library untuk export struk jadi PNG -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <style>
-
-body{
-font-family:Poppins;
-margin:0;
-background:#f4f6fb;
-}
-
-header{
-background:#4f46e5;
-color:white;
-padding:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-.container{
-max-width:900px;
-margin:auto;
-padding:20px;
-}
+body{font-family:Poppins;margin:0;background:#f4f6fb;}
+header{background:#4f46e5;color:white;padding:15px;text-align:center;}
+.container{max-width:900px;margin:auto;padding:20px;}
 
 .card{
-background:white;
-padding:20px;
-border-radius:12px;
+background:white;padding:20px;border-radius:12px;
 box-shadow:0 10px 20px rgba(0,0,0,0.1);
 margin-bottom:20px;
 }
 
 input{
-width:100%;
-padding:10px;
-margin:5px 0;
-border-radius:8px;
-border:1px solid #ccc;
+padding:6px;border-radius:6px;border:1px solid #ccc;
+margin:2px;
 }
 
 button{
-padding:10px 15px;
-border:none;
-border-radius:8px;
-background:#4f46e5;
-color:white;
-cursor:pointer;
-margin:3px;
+padding:6px 10px;border:none;border-radius:6px;
+background:#4f46e5;color:white;margin:2px;cursor:pointer;
 }
-
-button:hover{opacity:.8;}
 
 .product{
-display:flex;
-justify-content:space-between;
-padding:8px;
-background:#f1f1f1;
-margin:5px 0;
-border-radius:8px;
+display:flex;justify-content:space-between;
+padding:8px;background:#f1f1f1;margin:5px 0;border-radius:8px;
+align-items:center;
+gap:5px;
 }
 
-.total{
-font-size:20px;
-font-weight:600;
-margin-top:10px;
-}
-
-.hidden{
-display:none;
-}
+.total{font-size:20px;font-weight:600;}
+.hidden{display:none;}
 
 /* STRUK */
-
 .struk{
-width:230px;
-margin:auto;
-background:white;
-padding:10px;
-font-family:monospace;
-font-size:12px;
-color:black;
+width:230px;margin:auto;background:white;
+padding:10px;font-family:monospace;font-size:12px;
 }
-
-.struk h3{
-text-align:center;
-margin:5px 0;
-}
-
-.line{
-border-top:1px dashed black;
-margin:8px 0;
-}
-
-.struk-item{
-display:flex;
-justify-content:space-between;
-font-size:12px;
-}
-
-.center{
-text-align:center;
-margin-top:5px;
-}
+.struk-item{display:flex;justify-content:space-between;}
+.line{border-top:1px dashed black;margin:8px 0;}
+.center{text-align:center;}
 
 @media print{
-
-@page{
-size:58mm auto;
-margin:0;
+@page{size:58mm auto;margin:0;}
+body *{visibility:hidden;}
+.struk,.struk *{visibility:visible;}
+.struk{position:absolute;left:0;top:0;width:58mm;}
 }
-
-body *{
-visibility:hidden;
-}
-
-.struk, .struk *{
-visibility:visible;
-}
-
-.struk{
-position:absolute;
-left:0;
-top:0;
-width:58mm;
-}
-
-}
-
 </style>
 </head>
 
 <body>
 
 <header>
-<h2>🏪 KASIR TOKO DEACA</h2>
+<h1>🏪 TOKO DEACA</h1>
 </header>
 
 <div class="container" id="kasirPage">
 
 <div class="card">
-
-<h3>Tambah Produk</h3>
-
-<input id="nama" placeholder="Nama produk">
-
+<h3>Tambah Barang</h3>
+<input id="nama" placeholder="Nama barang">
 <input id="harga" type="number" placeholder="Harga">
-
-<input id="qty" type="number" placeholder="Jumlah">
-
+<input id="qty" type="number" step="0.01" placeholder="Jumlah (boleh 0.25)">
 <button onclick="tambah()">Tambah</button>
-
 </div>
 
 <div class="card">
-
 <h3>Keranjang</h3>
-
 <div id="list"></div>
 
-<div class="total">
-Total : Rp <span id="total">0</span>
-</div>
+<div class="total">Total: Rp <span id="total">0</span></div>
 
 <br>
-
-<button onclick="buatStruk()">Lihat Struk</button>
-
+<button onclick="buatStruk()">Struk</button>
+<button onclick="simpanTransaksi()">Simpan</button>
+<button onclick="lihatHistory()">History</button>
 </div>
 
 </div>
-
 
 <!-- STRUK -->
-
 <div id="strukPage" class="hidden">
-
 <div class="struk" id="areaStruk">
 
-<h3>TOKO DEACA</h3>
-
+<div class="center"><b>TOKO DEACA</b></div>
 <div class="center" id="tanggal"></div>
 
 <div class="line"></div>
-
 <div id="strukList"></div>
 
 <div class="line"></div>
@@ -203,394 +105,214 @@ Total : Rp <span id="total">0</span>
 </div>
 
 <div class="line"></div>
-
-<div class="center">
-Terima Kasih 🙏
-</div>
+<div class="center">Terima Kasih 🙏</div>
 
 </div>
 
 <br>
-
 <div class="center">
-
 <button onclick="window.print()">Print</button>
-
-<button onclick="downloadStruk()">Download PNG</button>
-
+<button onclick="downloadStruk()">PNG</button>
 <button onclick="kembali()">Kembali</button>
-
+</div>
 </div>
 
+<!-- HISTORY -->
+<div id="historyPage" class="hidden">
+<div class="container">
+<div class="card">
+<h3>📜 History</h3>
+<div id="historyList"></div>
+<button onclick="kembali()">Kembali</button>
 </div>
-
+</div>
+</div>
 
 <script>
 
-let total = 0
-let products = []
+let total=0
+let products=[]
 
+// TAMBAH
 function tambah(){
 
-let nama = document.getElementById("nama").value
-let harga = parseInt(document.getElementById("harga").value)
-let qty = parseInt(document.getElementById("qty").value)
+let nama=document.getElementById("nama").value
+let harga=parseFloat(document.getElementById("harga").value)
+let qty=parseFloat(document.getElementById("qty").value)
 
-if(!nama || !harga || !qty){
-alert("Isi semua dulu bro")
+if(!nama||!harga||!qty){
+alert("Isi semua")
 return
 }
 
-let subtotal = harga * qty
-
-total += subtotal
+let subtotal=Math.round(harga*qty)
 
 products.push({nama,harga,qty,subtotal})
-
-document.getElementById("total").innerText = total.toLocaleString()
-
-let div = document.createElement("div")
-
-div.className="product"
-
-div.innerHTML=`
-<span>${nama} (${qty} x ${harga.toLocaleString()})</span>
-<span>Rp ${subtotal.toLocaleString()}</span>
-`
-
-document.getElementById("list").appendChild(div)
+hitungTotal()
+updateKeranjang()
 
 document.getElementById("nama").value=""
 document.getElementById("harga").value=""
 document.getElementById("qty").value=""
-
 }
 
+// UPDATE
+function updateKeranjang(){
+
+let list=document.getElementById("list")
+list.innerHTML=""
+
+products.forEach((p,i)=>{
+
+let div=document.createElement("div")
+div.className="product"
+
+div.innerHTML=`
+<span>${p.nama}</span>
+
+<input type="number" value="${p.qty}" step="0.01" style="width:60px"
+oninput="editItem(${i}, this.value, 'qty')">
+
+<input type="number" value="${p.harga}" style="width:80px"
+oninput="editItem(${i}, this.value, 'harga')">
+
+<span>Rp ${p.subtotal.toLocaleString()}</span>
+
+<button onclick="hapusItem(${i})">X</button>
+`
+
+list.appendChild(div)
+
+})
+
+document.getElementById("total").innerText=total.toLocaleString()
+}
+
+// EDIT
+function editItem(i,val,type){
+
+if(val==="") return // biar bisa dihapus dulu
+
+val=parseFloat(val)
+
+if(type==="qty") products[i].qty=val
+if(type==="harga") products[i].harga=val
+
+products[i].subtotal=Math.round(products[i].qty*products[i].harga)
+
+hitungTotal()
+updateKeranjang()
+}
+
+// HAPUS
+function hapusItem(i){
+products.splice(i,1)
+hitungTotal()
+updateKeranjang()
+}
+
+// HITUNG
+function hitungTotal(){
+total=0
+products.forEach(p=> total+=p.subtotal)
+}
+
+// STRUK
 function buatStruk(){
 
 document.getElementById("kasirPage").classList.add("hidden")
 document.getElementById("strukPage").classList.remove("hidden")
 
-let strukList = document.getElementById("strukList")
-
-strukList.innerHTML=""
+let s=document.getElementById("strukList")
+s.innerHTML=""
 
 products.forEach(p=>{
-
-strukList.innerHTML+=`
-
+s.innerHTML+=`
 <div>${p.nama}</div>
-
 <div class="struk-item">
 <span>${p.qty} x ${p.harga.toLocaleString()}</span>
 <span>${p.subtotal.toLocaleString()}</span>
-</div>
-
-`
-
+</div>`
 })
 
-document.getElementById("strukTotal").innerText = total.toLocaleString()
-
-document.getElementById("tanggal").innerText =
-new Date().toLocaleString()
-
+document.getElementById("strukTotal").innerText=total.toLocaleString()
+document.getElementById("tanggal").innerText=new Date().toLocaleString()
 }
 
-function kembali(){
-
-document.getElementById("kasirPage").classList.remove("hidden")
-
-document.getElementById("strukPage").classList.add("hidden")
-
-}
-
+// PNG
 function downloadStruk(){
-
-let area = document.getElementById("areaStruk")
-
-html2canvas(area).then(canvas=>{
-
-let link = document.createElement("a")
-
-link.download = "struk-toko.png"
-
-link.href = canvas.toDataURL()
-
-link.click()
-
+html2canvas(document.getElementById("areaStruk")).then(c=>{
+let a=document.createElement("a")
+a.href=c.toDataURL()
+a.download="struk.png"
+a.click()
 })
-
 }
 
-</script>
-
-</body>
-</html>box-shadow:0 10px 20px rgba(0,0,0,0.1);
-margin-bottom:20px;
+// SIMPAN
+function simpanTransaksi(){
+let h=JSON.parse(localStorage.getItem("history"))||[]
+h.push({tanggal:new Date().toLocaleString(),items:products,total})
+localStorage.setItem("history",JSON.stringify(h))
+alert("Tersimpan")
 }
 
-input{
-width:100%;
-padding:10px;
-margin:5px 0;
-border-radius:8px;
-border:1px solid #ccc;
-}
+// HISTORY
+function lihatHistory(){
 
-button{
-padding:10px 15px;
-border:none;
-border-radius:8px;
-background:#4f46e5;
-color:white;
-cursor:pointer;
-}
+document.getElementById("kasirPage").classList.add("hidden")
+document.getElementById("historyPage").classList.remove("hidden")
 
-button:hover{
-opacity:.8;
-}
+let h=JSON.parse(localStorage.getItem("history"))||[]
+let list=document.getElementById("historyList")
+list.innerHTML=""
 
-.product{
-display:flex;
-justify-content:space-between;
-padding:8px;
-background:#f1f1f1;
-margin:5px 0;
-border-radius:8px;
-}
+h.reverse().forEach((d,i)=>{
 
-.total{
-font-size:20px;
-font-weight:600;
-margin-top:10px;
-}
-
-.hidden{
-display:none;
-}
-
-/* STRUK */
-
-.struk{
-width:280px;
-margin:auto;
-background:white;
-padding:15px;
-font-family:monospace;
-}
-
-.struk h3{
-text-align:center;
-margin:5px 0;
-}
-
-.line{
-border-top:1px dashed black;
-margin:10px 0;
-}
-
-.struk-item{
-display:flex;
-justify-content:space-between;
-font-size:14px;
-}
-
-.center{
-text-align:center;
-margin-top:10px;
-}
-
-@media print{
-
-body *{
-visibility:hidden;
-}
-
-.struk, .struk *{
-visibility:visible;
-}
-
-.struk{
-position:absolute;
-left:0;
-top:0;
-width:58mm;
-}
-
-}
-
-</style>
-</head>
-
-<body>
-
-<header>
-<h2>🏪 KASIR TOKO DEACA</h2>
-<button onclick="toggleMode()">Dark Mode</button>
-</header>
-
-<div class="container" id="kasirPage">
-
-<div class="card">
-
-<h3>Tambah Produk</h3>
-
-<input id="nama" placeholder="Nama produk">
-
-<input id="harga" type="number" placeholder="Harga">
-
-<input id="qty" type="number" placeholder="Jumlah">
-
-<button onclick="tambah()">Tambah</button>
-
-</div>
-
-<div class="card">
-
-<h3>Keranjang</h3>
-
-<div id="list"></div>
-
-<div class="total">
-Total : Rp <span id="total">0</span>
-</div>
-
-<br>
-
-<button onclick="buatStruk()">Cetak Struk</button>
-
-</div>
-
-</div>
-
-
-<!-- STRUK -->
-
-<div id="strukPage" class="hidden">
-
-<div class="struk">
-
-<h3>TOKO DEACA</h3>
-
-<div class="center" id="tanggal"></div>
-
-<div class="line"></div>
-
-<div id="strukList"></div>
-
-<div class="line"></div>
-
-<div class="struk-item">
-<b>TOTAL</b>
-<b>Rp <span id="strukTotal"></span></b>
-</div>
-
-<div class="line"></div>
-
-<div class="center">
-Terima Kasih
-</div>
-
-<br>
-
-<div class="center">
-
-<button onclick="window.print()">Print</button>
-
-<button onclick="kembali()">Kembali</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<script>
-
-let total = 0
-let products = []
-
-function tambah(){
-
-let nama = document.getElementById("nama").value
-let harga = parseInt(document.getElementById("harga").value)
-let qty = parseInt(document.getElementById("qty").value)
-
-if(!nama || !harga || !qty){
-alert("Isi semua dulu bro")
-return
-}
-
-let subtotal = harga * qty
-
-total += subtotal
-
-products.push({nama,harga,qty,subtotal})
-
-document.getElementById("total").innerText = total.toLocaleString()
-
-let div = document.createElement("div")
-
+let div=document.createElement("div")
 div.className="product"
 
 div.innerHTML=`
-<span>${nama} (${qty} x ${harga.toLocaleString()})</span>
-<span>Rp ${subtotal.toLocaleString()}</span>
-`
-
-document.getElementById("list").appendChild(div)
-
-document.getElementById("nama").value=""
-document.getElementById("harga").value=""
-document.getElementById("qty").value=""
-
-}
-
-function buatStruk(){
-
-document.getElementById("kasirPage").classList.add("hidden")
-document.getElementById("strukPage").classList.remove("hidden")
-
-let strukList = document.getElementById("strukList")
-
-strukList.innerHTML=""
-
-products.forEach(p=>{
-
-strukList.innerHTML+=`
-
-<div>${p.nama}</div>
-
-<div class="struk-item">
-<span>${p.qty} x ${p.harga.toLocaleString()}</span>
-<span>${p.subtotal.toLocaleString()}</span>
+<div>
+<b>${d.tanggal}</b><br>
+Rp ${d.total.toLocaleString()}
 </div>
-
+<button onclick="pakaiHistory(${i})">Pakai</button>
 `
+
+list.appendChild(div)
 
 })
-
-document.getElementById("strukTotal").innerText = total.toLocaleString()
-
-document.getElementById("tanggal").innerText =
-new Date().toLocaleString()
-
 }
 
+// PAKAI HISTORY (FIX TANPA POPUP)
+function pakaiHistory(i){
+
+let h=JSON.parse(localStorage.getItem("history"))||[]
+let data=h.reverse()[i]
+
+products=[]
+total=0
+
+data.items.forEach(item=>{
+products.push({
+nama:item.nama,
+harga:parseFloat(item.harga),
+qty:parseFloat(item.qty),
+subtotal:Math.round(item.qty*item.harga)
+})
+})
+
+hitungTotal()
+updateKeranjang()
+kembali()
+}
+
+// KEMBALI
 function kembali(){
-
 document.getElementById("kasirPage").classList.remove("hidden")
-
 document.getElementById("strukPage").classList.add("hidden")
-
-}
-
-function toggleMode(){
-
-document.body.classList.toggle("dark")
-
+document.getElementById("historyPage").classList.add("hidden")
 }
 
 </script>
